@@ -1,4 +1,4 @@
-# Student Management Microservice
+# Virtualbox-Microservice
 
 A simple RESTful microservice built with Node.js and Express, designed to run on multiple VirtualBox VMs for distributed computing demonstration.
 
@@ -13,13 +13,13 @@ This project demonstrates:
 ## Architecture
 
 The system uses a client-server architecture with:
-- **Backend VM**: Hosts the Node.js microservice (Student Management API)
+- **Backend VM**: Hosts the Node.js microservice
 - **Client VM**: Consumes the service using HTTP requests
 
 ## Prerequisites
 
 - VirtualBox installed on host machine
-- Ubuntu Server 24.04 LTS ISO file
+- Ubuntu Desktop ISO file
 - Internet connection for package installation
 
 ## Installation Steps
@@ -29,7 +29,7 @@ The system uses a client-server architecture with:
 Create two VMs in VirtualBox:
 
 **Backend VM:**
-- Name: Backend-VM
+- Name: Microservice VM1
 - Type: Linux
 - Version: Ubuntu (64-bit)
 - Memory: 2048 MB
@@ -37,7 +37,7 @@ Create two VMs in VirtualBox:
 - Storage: 20 GB (VDI, dynamically allocated)
 
 **Client VM:**
-- Name: Client-VM
+- Name: Microservice VM2
 - Type: Linux
 - Version: Ubuntu (64-bit)
 - Memory: 1024 MB
@@ -48,15 +48,15 @@ Create two VMs in VirtualBox:
 
 For both VMs:
 - Go to Settings → Network → Adapter 1
-- Attached to: Host-Only Adapter
+- Attached to: NAT Network
 - This allows VMs to communicate with each other
 
-### 3. Install Ubuntu Server
+### 3. Install Ubuntu Desktop
 
-1. Attach Ubuntu Server ISO to each VM
+1. Attach Ubuntu Desktop ISO to each VM
 2. Start the VM and follow installation prompts
 3. Create a user account
-4. Install OpenSSH server when prompted
+4. Complete installation and restart the VM
 
 ### 4. Verify Network Connectivity
 
@@ -65,7 +65,7 @@ On each VM, check IP address:
 ip a
 ```
 
-Note down the IP addresses (e.g., 192.168.56.101 for Backend, 192.168.56.102 for Client)
+Note down the IP addresses (e.g., 10.0.2.x assigned automatically via NAT DHCP)
 
 Test connectivity from Client VM:
 ```bash
@@ -95,8 +95,8 @@ npm -v
 
 Create project directory:
 ```bash
-mkdir student-microservice
-cd student-microservice
+mkdir microservice
+cd microservice
 ```
 
 Copy the project files (server.js and package.json) to this directory.
@@ -154,46 +154,11 @@ sudo apt install -y curl
 
 Test the endpoints (replace IP with your Backend VM IP):
 
-```bash
 # Welcome message
-curl http://192.168.56.101:3000/
+curl http://10.0.2.15:3000/
 
 # Health check
-curl http://192.168.56.101:3000/health
-
-# System info
-curl http://192.168.56.101:3000/system
-
-# All students
-curl http://192.168.56.101:3000/students
-
-# Specific student
-curl http://192.168.56.101:3000/students/1
-```
-
-## Sample Response
-
-**GET /students**
-```json
-{
-  "total": 4,
-  "students": [
-    {
-      "id": 1,
-      "name": "Alice Johnson",
-      "course": "Computer Science",
-      "year": 2
-    },
-    {
-      "id": 2,
-      "name": "Bob Smith",
-      "course": "Information Technology",
-      "year": 3
-    }
-  ],
-  "timestamp": "2026-02-05T10:30:00.000Z"
-}
-```
+curl http://10.0.2.15:3000/health
 
 ## Troubleshooting
 
